@@ -8,7 +8,7 @@ subdomain=$(expr match "$CERTBOT_DOMAIN" '\(.*\)\..*\..*')
 scriptDir=$(dirname $0)
 configFile="$scriptDir/config.json"
 
-key=$(jq '.key' "$configFile")
+token=$(jq '.token' "$configFile")
 mail=$(jq '.mail' "$configFile")
 zone=$(jq '.zone' "$configFile")
 
