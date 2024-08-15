@@ -1,0 +1,5 @@
+{
+    "zone": "The ID of the zone you'll edit, https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/",
+    "mail": "The account registered email",
+    "token": "The API token you created, https://developers.cloudflare.com/fundamentals/api/get-started/create-token/"
+}
