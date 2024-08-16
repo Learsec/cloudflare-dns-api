@@ -1,5 +1,5 @@
 #!/bin/bash
-#TODO: add adding non-existent records.
+#TODO: add adding non-existent records. Add validations on responses (empty or error). Add validation on data (empty or invalid). Add validation on jq outputs (error, empty or multiple)
 
 #This is just for testing
 #CERTBOT_DOMAIN="vault.learsec.com"
