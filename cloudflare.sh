@@ -1,5 +1,9 @@
 #!/bin/bash
-CERTBOT_DOMAIN="vault.learsec.com"
+#TODO: add adding non-existent records.
+
+#This is just for testing
+#CERTBOT_DOMAIN="vault.learsec.com"
+#CERTBOT_VALIDATION="sometestingvalue"
 
 #includes TLD: example.com
 domain=$(expr match "$CERTBOT_DOMAIN" '.*\.\(.*\..*\)')
