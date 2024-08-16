@@ -119,9 +119,9 @@ installPrereqs
 token=$(jq -r '.token' "$configFile")
 mail=$(jq -r '.mail' "$configFile")
 zone=$(jq -r '.zone' "$configFile")
-apiUrl="https://api.cloudflare.com/client/v4/zonaes/$zone/dns_records"
+apiUrl="https://api.cloudflare.com/client/v4/zonas/$zone/dns_records"
 
 domains=$(listDomains)
-#recordMatch=$(findRecord "$domains" "$newRecord")
+recordMatch=$(findRecord "$domains" "$newRecord")
 #echo $recordMatch
 #if ($recordMatch)
