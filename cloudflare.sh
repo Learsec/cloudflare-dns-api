@@ -1,9 +1,9 @@
 #!/bin/bash
-#TODO: add adding non-existent records. Add validations on responses (empty or error). Add validation on data (empty or invalid). Add validation on jq outputs (error, empty or multiple)
+#TODO: Add validation on jq outputs (error, empty or multiple)
 
-#This is just for testing
-CERTBOT_DOMAIN="vaulting.learsec.com"
-CERTBOT_VALIDATION="sometestingvalue"
+#Set this if you want to test
+#CERTBOT_DOMAIN="some.domain.here"
+#CERTBOT_VALIDATION="some_challengestring"
 
 #includes TLD: example.com
 domain=$(expr match "$CERTBOT_DOMAIN" '.*\.\(.*\..*\)')
@@ -109,12 +109,23 @@ function findRecord(){
 }
 
 function updateTXTRecord(){
+    oldValue=$(echo $recordMatch | jq -r ".content")
     id=$(echo $recordMatch | jq -r ".id")
     data=$( jq -r -n --arg content "$CERTBOT_VALIDATION" --arg name "$newRecord" --arg type "TXT" --arg comment "" --arg id "$id" '{content: $content, name: $name, type: $type, comment: $comment, id: $id, tags: [], ttl: 1}')
+    
+    writeLog "Will update the record $newRecord with value $CERTBOT_VALIDATION (old value $oldValue)"
+    
     curl --request PATCH "$apiUrl/$id" -H "X-Auth-Email: $mail" -H "Authorization: Bearer $token" -H "Content-Type: application/json"  --data "$data"
 }
 
-#updateTXTRecord
+function createTXTRecord(){
+    data=$( jq -r -n --arg content "$CERTBOT_VALIDATION" --arg name "$newRecord" --arg type "TXT" --arg comment "" '{content: $content, name: $name, type: $type, comment: $comment, tags: [], ttl: 1}')
+    
+    writeLog "Will create the record $newRecord with value $CERTBOT_VALIDATION"
+    
+    curl --request POST "$apiUrl" -H "X-Auth-Email: $mail" -H "Authorization: Bearer $token" -H "Content-Type: application/json"  --data "$data"
+}
+
 installPrereqs
 token=$(jq -r '.token' "$configFile")
 mail=$(jq -r '.mail' "$configFile")
@@ -123,5 +134,8 @@ apiUrl="https://api.cloudflare.com/client/v4/zones/$zone/dns_records"
 
 domains=$(listDomains)
 recordMatch=$(findRecord "$domains" "$newRecord")
-#echo $recordMatch
-#if ($recordMatch)
+if [[ -n $recordMatch ]]; then
+  updateTXTRecord
+else
+  createTXTRecord
+fi
